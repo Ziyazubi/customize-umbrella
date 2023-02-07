@@ -87,10 +87,34 @@
   <script>
         function clickHandler(color, src, bGColor){
             return function(){
-                document.body.style.backgroundColor = `${color}`;
-                document.getElementById('umbrella_img').src = `${src}`;
-                document.getElementById('upload-btn').style.backgroundColor = `${bGColor}`;
-                document.getElementById('upload-btn').style.borderColor = `${bGColor}`;
+
+                    let umbrellaNode = document.getElementById('umbrella');
+                    if(umbrellaNode){
+                        umbrellaNode.classList.add('hide');
+                    }
+                    let loaderNode = document.getElementById('loader');
+                    if(loaderNode){
+                        loaderNode.classList.remove('hide');
+                        document.getElementById('uploadIcon').src = `./assets/img/loader_icon.svg`;
+                    }
+
+                setTimeout(function(){
+
+                    let loaderNode = document.getElementById('loader');
+                        if(loaderNode){
+                            loaderNode.classList.add('hide');
+                        }
+                        let umbrellaNode = document.getElementById('umbrella');
+                        if(umbrellaNode){
+                            umbrellaNode.classList.remove('hide');
+                            document.getElementById('uploadIcon').src = `./assets/img/upload_icon.svg`;
+                        }
+
+                    document.body.style.backgroundColor = `${color}`;
+                    document.getElementById('umbrella_img').src = `${src}`;
+                    document.getElementById('upload-btn').style.backgroundColor = `${bGColor}`;
+                    document.getElementById('upload-btn').style.borderColor = `${bGColor}`;
+                }, 2000);
             }
         }
     
