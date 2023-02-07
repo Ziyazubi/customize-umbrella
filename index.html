@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Customize Umbrella</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    
+    <script src='https://code.jquery.com/jquery-git.js'></script>
+    
+    <link rel="stylesheet" href="./css/style.css">
+    
+    <style>
+        body{
+            background-color:#ffe6e6;
+        }
+    </style>
+</head>
+
+<body>
+
+  <main>
+    <div class="container-fluid">
+        <div class="row mainDiv">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <div id="umbrella" class="leftDiv">
+                            <img id="umbrella_img" src="./assets/img/Pink_umbrella.png" class="umbrellaImg"/>
+                            <div class="upload-image-preview"></div>
+                        </div>
+                        <div id="loader" class="loader-div hide">
+                            <img src="./assets/img/loader_icon.svg" class="loader-effect" />
+                        </div>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row rightDiv">
+                    <h1>Custom Umbrella</h1>
+                    <div class="buttons">
+                        <button id="pink" class="changeColorBtn">
+                        </button>
+
+                        <button id="blue" class="changeColorBtn">
+                        </button>
+
+                        <button id="yellow" class="changeColorBtn">
+                        </button>
+                    </div>
+                    <div class="bottomDiv">
+                        <h4>Customize your umbrella</h4>
+                        <p class="topLine">Upload a logo for an instant preview</p>
+                        <span class="bottomLine">.png and .jpg files only. Max file size is 5MB.</span>
+                        <div class="uploadDiv">
+                            <label class="custom-file-upload" id="upload-btn" style="background-color: palevioletred; border-color: palevioletred;" >
+                                <input type="file" name="file"/>
+                                <img src="./assets/img/upload_icon.svg" id="uploadIcon" class="upload-icon"/> 
+                                <span class="upload-text">UPLOAD LOGO</span>
+                            </label>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </main>
+  
+
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+
+  <script>
+        function clickHandler(color, src, bGColor){
+            return function(){
+                document.body.style.backgroundColor = `${color}`;
+                document.getElementById('umbrella_img').src = `${src}`;
+                document.getElementById('upload-btn').style.backgroundColor = `${bGColor}`;
+                document.getElementById('upload-btn').style.borderColor = `${bGColor}`;
+            }
+        }
+    
+        document.getElementById('pink').onclick=clickHandler('#ffe6e6', "./assets/img/Pink_umbrella.png", "palevioletred");
+        document.getElementById('blue').onclick=clickHandler('#ccffe6', "./assets/img/Blue_umbrella.png", "rgb(0, 153, 204)");
+        document.getElementById('yellow').onclick=clickHandler('#ffff99', "./assets/img/Yellow_umbrella.png", "yellow");
+
+        $(document).ready(function(){
+            $("input[name=file]").change(function () {
+                    if (this.files && this.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            var img = $('<img>').attr('src', e.target.result);
+                            $('.upload-image-preview').html(img);
+                        };
+
+                        reader.readAsDataURL(this.files[0]);
+
+                        let umbrellaNode = document.getElementById('umbrella');
+                        if(umbrellaNode){
+                            umbrellaNode.classList.add('hide');
+                        }
+                        let loaderNode = document.getElementById('loader');
+                        if(loaderNode){
+                            loaderNode.classList.remove('hide');
+                            document.getElementById('uploadIcon').src = `./assets/img/loader_icon.svg`;
+                        }
+
+                        setTimeout(function(){
+                        let loaderNode = document.getElementById('loader');
+                        if(loaderNode){
+                            loaderNode.classList.add('hide');
+                        }
+                        let umbrellaNode = document.getElementById('umbrella');
+                        if(umbrellaNode){
+                            umbrellaNode.classList.remove('hide');
+                            document.getElementById('uploadIcon').src = `./assets/img/upload_icon.svg`;
+                        }
+                        }, 2000)
+
+                    }
+                });
+        });
+  </script>
+
+</body>
+
+</html>
