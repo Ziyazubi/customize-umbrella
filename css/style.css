@@ -120,8 +120,15 @@ input[type="file"] {
     width: 200%;
     height: 50px;
 }
+
+.upload-icon{
+    position: relative;
+    float: left;
+}
+
 .upload-text{
-    font-size: 20px;
+    position: relative;
+    font-size: 120%;
     font-weight: 500;
-    margin-left: 50px;
+    margin-left: 5%;
 }
