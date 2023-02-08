@@ -33,7 +33,7 @@
                     <div class="col-sm-10">
                         <div id="umbrella" class="leftDiv">
                             <img id="umbrella_img" src="./assets/img/Pink_umbrella.png" class="umbrellaImg"/>
-                            <div class="upload-image-preview"></div>
+                            <div class="upload-image-preview" id="uploadImagePreview"></div>
                         </div>
                         <div id="loader" class="loader-div hide">
                             <img src="./assets/img/loader_icon.svg" class="loader-effect" />
@@ -46,13 +46,13 @@
                 <div class="row rightDiv">
                     <h1>Custom Umbrella</h1>
                     <div class="buttons">
-                        <button id="pink" class="changeColorBtn">
+                        <button id="pink" onclick="changeColors(0)" class="changeColorBtn">
                         </button>
 
-                        <button id="blue" class="changeColorBtn">
+                        <button id="blue" onclick="changeColors(1)" class="changeColorBtn">
                         </button>
 
-                        <button id="yellow" class="changeColorBtn">
+                        <button id="yellow" onclick="changeColors(2)" class="changeColorBtn">
                         </button>
                     </div>
                     <div class="bottomDiv">
@@ -61,9 +61,9 @@
                         <span class="bottomLine">.png and .jpg files only. Max file size is 5MB.</span>
                         <div class="uploadDiv">
                             <label class="custom-file-upload" id="upload-btn" style="background-color: palevioletred; border-color: palevioletred;" >
-                                <input type="file" name="file"/>
+                                <input type="file" id="file" name="file" onchange="checkFileSize()" />
                                 <img src="./assets/img/upload_icon.svg" id="uploadIcon" class="upload-icon"/> 
-                                <span class="upload-text">UPLOAD LOGO</span>
+                                <span class="upload-text" id="uploadText">UPLOAD LOGO</span>
                             </label>
                             </button>
                         </div>
@@ -85,80 +85,121 @@
   </script>
 
   <script>
-        function clickHandler(color, src, bGColor){
-            return function(){
 
-                    let umbrellaNode = document.getElementById('umbrella');
-                    if(umbrellaNode){
-                        umbrellaNode.classList.add('hide');
+        let loaderIconSrc = "./assets/img/loader_icon.svg";
+        let uploadIconSrc = "./assets/img/upload_icon.svg";
+
+        function changeColors(i){
+
+            let CustomizeObj = [
+                {
+                    BgColor: "#ffe6e6",
+                    ImgSrc: "./assets/img/Pink_umbrella.png",
+                    UploadBtnColor: "palevioletred",
+                },
+                {
+                    BgColor: "#ccffe6",
+                    ImgSrc: "./assets/img/Blue_umbrella.png",
+                    UploadBtnColor: "rgb(0, 153, 204)",
+                },
+                {
+                    BgColor: "#ffff99",
+                    ImgSrc: "./assets/img/Yellow_umbrella.png",
+                    UploadBtnColor: "yellow",
+                }
+            ];
+
+
+            console.log("Object:--> ", CustomizeObj[i], "Properties and values: -->", CustomizeObj[i].BgColor, CustomizeObj[i].ImgSrc, CustomizeObj[i].UploadBtnColor);
+
+            let umbrellaNode = document.getElementById('umbrella');
+            if(umbrellaNode){
+                umbrellaNode.classList.add('hide');
+            }
+            let loaderNode = document.getElementById('loader');
+            if(loaderNode){
+                loaderNode.classList.remove('hide');
+                document.getElementById('uploadIcon').src = `${loaderIconSrc}`;
+            }
+
+            setTimeout(function(){
+
+                let loaderNode = document.getElementById('loader');
+                if(loaderNode){
+                    loaderNode.classList.add('hide');
+                }
+                let umbrellaNode = document.getElementById('umbrella');
+                if(umbrellaNode){
+                    umbrellaNode.classList.remove('hide');
+                    document.getElementById('uploadIcon').src = `${uploadIconSrc}`;
+                }
+
+                document.body.style.background = CustomizeObj[i].BgColor;
+                document.getElementById('umbrella_img').src = CustomizeObj[i].ImgSrc;
+                document.getElementById('upload-btn').style.backgroundColor = CustomizeObj[i].UploadBtnColor;
+                document.getElementById('upload-btn').style.borderColor = CustomizeObj[i].UploadBtnColor;
+            }, 4000);
+        }
+
+        function checkFileSize(){
+            let f = document.getElementById("file");
+            if(f.files.length == 1){
+                console.log("File selected");
+                for(let i = 0; i <= f.files.length-1; i++){
+                    let fileSize = f.files.item(i).size;
+
+                    let fileName = f.files.item(i).name;
+
+                    var allowedExtensions = /(\.png|\.jpg|\.jpeg)$/i;
+
+                    console.log(fileName , " -------------- ");
+                    
+                    let file = Math.round((fileSize/1024));
+                    
+                    if (file >= 5120){
+                        console.log(fileName, " -------++------- ");
+                        alert("File size is too big! Please select a file less than 5 MB.");
                     }
-                    let loaderNode = document.getElementById('loader');
-                    if(loaderNode){
-                        loaderNode.classList.remove('hide');
-                        document.getElementById('uploadIcon').src = `./assets/img/loader_icon.svg`;
+                    else if (!allowedExtensions.exec(fileName)) {
+                        alert("Invalid file type! File type should strictly be of '.jpg' or '.png' or '.jpeg' extension!");
                     }
+                    else{
+                            var reader = new FileReader();
 
-                setTimeout(function(){
+                            reader.onload = function (e) {
+                                var img = $('<img>').attr('src', e.target.result);
+                                $('.upload-image-preview').html(img);
+                            };
 
-                    let loaderNode = document.getElementById('loader');
-                        if(loaderNode){
-                            loaderNode.classList.add('hide');
-                        }
-                        let umbrellaNode = document.getElementById('umbrella');
-                        if(umbrellaNode){
-                            umbrellaNode.classList.remove('hide');
-                            document.getElementById('uploadIcon').src = `./assets/img/upload_icon.svg`;
-                        }
+                            reader.readAsDataURL(f.files[0]);
 
-                    document.body.style.backgroundColor = `${color}`;
-                    document.getElementById('umbrella_img').src = `${src}`;
-                    document.getElementById('upload-btn').style.backgroundColor = `${bGColor}`;
-                    document.getElementById('upload-btn').style.borderColor = `${bGColor}`;
-                }, 4000);
+                            let umbrellaNode = document.getElementById('umbrella');
+                            if(umbrellaNode){
+                                umbrellaNode.classList.add('hide');
+                            }
+                            let loaderNode = document.getElementById('loader');
+                            if(loaderNode){
+                                loaderNode.classList.remove('hide');
+                                document.getElementById('uploadIcon').src = `${loaderIconSrc}`;
+                                document.getElementById('uploadText').innerHTML = `${fileName}`;
+                            }
+
+                            setTimeout(function(){
+                            let loaderNode = document.getElementById('loader');
+                            if(loaderNode){
+                                loaderNode.classList.add('hide');
+                            }
+                            let umbrellaNode = document.getElementById('umbrella');
+                            if(umbrellaNode){
+                                umbrellaNode.classList.remove('hide');
+                                document.getElementById('uploadIcon').src = `${uploadIconSrc}`;
+                                document.getElementById('uploadText').innerHTML = "UPLOAD LOGO";
+                            }
+                            }, 4000)
+                    }
+                }
             }
         }
-    
-        document.getElementById('pink').onclick=clickHandler('#ffe6e6', "./assets/img/Pink_umbrella.png", "palevioletred");
-        document.getElementById('blue').onclick=clickHandler('#ccffe6', "./assets/img/Blue_umbrella.png", "rgb(0, 153, 204)");
-        document.getElementById('yellow').onclick=clickHandler('#ffff99', "./assets/img/Yellow_umbrella.png", "yellow");
-
-        $(document).ready(function(){
-            $("input[name=file]").change(function () {
-                    if (this.files && this.files[0]) {
-                        var reader = new FileReader();
-
-                        reader.onload = function (e) {
-                            var img = $('<img>').attr('src', e.target.result);
-                            $('.upload-image-preview').html(img);
-                        };
-
-                        reader.readAsDataURL(this.files[0]);
-
-                        let umbrellaNode = document.getElementById('umbrella');
-                        if(umbrellaNode){
-                            umbrellaNode.classList.add('hide');
-                        }
-                        let loaderNode = document.getElementById('loader');
-                        if(loaderNode){
-                            loaderNode.classList.remove('hide');
-                            document.getElementById('uploadIcon').src = `./assets/img/loader_icon.svg`;
-                        }
-
-                        setTimeout(function(){
-                        let loaderNode = document.getElementById('loader');
-                        if(loaderNode){
-                            loaderNode.classList.add('hide');
-                        }
-                        let umbrellaNode = document.getElementById('umbrella');
-                        if(umbrellaNode){
-                            umbrellaNode.classList.remove('hide');
-                            document.getElementById('uploadIcon').src = `./assets/img/upload_icon.svg`;
-                        }
-                        }, 4000)
-
-                    }
-                });
-        });
   </script>
 
 </body>
